@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+<h:head></h:head>
+
+<h:body>
+    <h2>Persons</h2>
+ 
+ 	<h:form id="form">
+	   <p:growl id="msgs" showDetail="true"/>
+	 
+	   <p:dataTable id="persons" var="person" value="#{personBean.persons}" editable="true">
+	 
+	       <p:ajax event="rowEdit" listener="#{personBean.onRowEdit}" update=":form:msgs" />
+	       <p:ajax event="rowEditCancel" listener="#{personBean.onRowCancel}" update=":form:msgs" />
+	 
+	       <p:column headerText="Id">
+	           <p:cellEditor>
+	               <f:facet name="output"><h:outputText value="#{person.id}" /></f:facet>
+	               <f:facet name="input"><p:inputText id="modelInput" disabled="true" value="#{person.id}" style="width:100%"/></f:facet>
+	           </p:cellEditor>
+	       </p:column>
+	 
+	       <p:column headerText="Name">
+	           <p:cellEditor>
+	               <f:facet name="output"><h:outputText value="#{person.name}" /></f:facet>
+	               <f:facet name="input"><p:inputText value="#{person.name}" style="width:100%" label="Name"/></f:facet>
+	           </p:cellEditor>
+	       </p:column>
+	 
+	       <p:column headerText="Age">
+	           <p:cellEditor>
+	               <f:facet name="output"><h:outputText value="#{person.age}" /></f:facet>
+	               <f:facet name="input"><p:inputText value="#{person.age}" style="width:100%" label="Age"/></f:facet>
+	           </p:cellEditor>
+	       </p:column>
+	 
+	       <p:column headerText="Edit" style="width:60px">
+	           <p:rowEditor />
+	       </p:column>
+	       
+	       <p:growl id="message" showDetail="true" />
+	       
+	       <p:column style="width:90px">
+	           <p:commandButton icon="ui-icon-close" title="remove person" actionListener="#{personBean.deleteAction(person)}" update="@form">
+			       <p:confirm header="Confirmation" message="Are you sure?" icon="ui-icon-alert" />
+			   </p:commandButton>
+			 
+			   <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+			       <p:commandButton value="Yes" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+			       <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+			   </p:confirmDialog>
+	       </p:column>
+	   </p:dataTable>
+   </h:form>
+
+	<h:form style="margin: 16px 0;">
+		<p:growl id="growl" />
+		<p:panel id="pnl" header="Form">
+			<p:outputLabel for="name">Name</p:outputLabel>
+			<p:inputText id="name" value="#{personBean.personAdd.name}" required="true" requiredMessage="Name is required" />
+			<p:outputLabel for="age" style="margin-left: 12px;">Age</p:outputLabel>
+			<p:inputText id="age" value="#{personBean.personAdd.age}" required="true" requiredMessage="Age is required" />
+			<br />
+			<p:commandButton id="saveBtn" style="margin: 8px 62px;" value="Submit" actionListener="#{personBean.addAction}" update="@form form" />
+		</p:panel>
+		<p:blockUI block="pnl" trigger="saveBtn" />
+	</h:form>
+
+</h:body>
+
+</html>
